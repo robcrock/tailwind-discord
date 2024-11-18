@@ -1,16 +1,47 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+import LinkServer from "./components/disc-link";
+import DiscLink from "./components/disc-link";
+import IconDiscord from "./components/icons/icon-discord";
+
+const whitney = localFont({
+  src: [
+    {
+      path: "./fonts/whitney/whitney-light.woff",
+      weight: "300",
+      style: "normal",
+    },
+    {
+      path: "./fonts/whitney/whitney-book.woff",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "./fonts/whitney/whitney-medium.woff",
+      weight: "500",
+      style: "normal",
+    },
+    {
+      path: "./fonts/whitney/whitney-semiBold.woff",
+      weight: "600",
+      style: "normal",
+    },
+  ],
+  variable: "--font-whitney",
 });
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+
+const ginto = localFont({
+  src: [
+    {
+      path: "./fonts/ginto/ginto-semibold.woff",
+      weight: "600",
+      style: "normal",
+    },
+  ],
+  variable: "--font-ginto",
 });
 
 export const metadata: Metadata = {
@@ -23,12 +54,19 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const homeIcon = <IconDiscord className="h-[30px] w-[30px]" />;
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${whitney.variable} ${ginto.variable} font-whitney antialiased`}
       >
-        {children}
+        <div className="flex h-screen text-gray-300">
+          <div className="hide-scrollbar space-y-2 overflow-y-scroll bg-zinc-900 p-3">
+            <DiscLink href={"/"} icon={homeIcon} />
+            <DiscLink href={"/servers/1"} icon={"S1"} />
+          </div>
+          {children}
+        </div>
       </body>
     </html>
   );
