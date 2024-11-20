@@ -4,12 +4,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 
-type DiscLinkProps = {
+type NavLinkProps = {
   href: string;
-  icon: ReactNode;
+  children: ReactNode;
 };
 
-const DiscLink = ({ href, icon }: DiscLinkProps) => {
+const NavLink = ({ href, children }: NavLinkProps) => {
   const pathname = usePathname();
   const isActive = pathname === href;
 
@@ -20,7 +20,7 @@ const DiscLink = ({ href, icon }: DiscLinkProps) => {
     "scale-0 group-hover:scale-100 w-1 h-4";
 
   const iconBaseClasses =
-    "flex h-12 w-12 items-center justify-center transition-all duration-300 group-hover:rounded-2xl group-hover:bg-brand group-hover:text-white ";
+    "flex h-12 w-12 items-center justify-center transition-all duration-300 group-hover:rounded-2xl group-hover:bg-brand group-hover:text-white overflow-hidden";
   const iconActiveClasses = "rounded-2xl bg-brand text-white";
   const iconInactiveClasses = "rounded-3xl bg-gray-800 text-gray-400";
 
@@ -36,11 +36,11 @@ const DiscLink = ({ href, icon }: DiscLinkProps) => {
           href={href}
           className={`${isActive ? iconActiveClasses : iconInactiveClasses} ${iconBaseClasses}`}
         >
-          {icon}
+          {children}
         </Link>
       </div>
     </div>
   );
 };
 
-export default DiscLink;
+export default NavLink;
