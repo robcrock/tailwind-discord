@@ -4,7 +4,8 @@ import * as Icons from "@/app/components/icons/icons";
 import { NextPage } from "next";
 import Link from "next/link";
 import data from "../../../../../data.json";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 
 interface PageProps {
   params: {
@@ -14,7 +15,16 @@ interface PageProps {
 }
 
 const ChannelIdPage: NextPage<PageProps> = ({ params }) => {
+  const [closedCategories, setClosedCategories] = useState<number[]>([]);
   const { cid } = params;
+
+  function toggleCategory(categoryId: number) {
+    setClosedCategories((prevClosedCategories) => {
+      return prevClosedCategories.includes(categoryId)
+        ? prevClosedCategories.filter((id) => id !== categoryId)
+        : [...prevClosedCategories, categoryId];
+    });
+  }
 
   return (
     <>
@@ -31,19 +41,31 @@ const ChannelIdPage: NextPage<PageProps> = ({ params }) => {
           {data["1"].categories.map((category) => (
             <div key={category.label}>
               {category.label && (
-                <button className="flex items-center space-x-0.5 px-0.5 font-title text-xs uppercase tracking-wide text-gray-500">
-                  <Icons.Arrow className="mr-0.5 h-3 w-3" />
+                <button
+                  onClick={() => toggleCategory(category.id)}
+                  className="flex w-full items-center space-x-0.5 px-0.5 font-title text-xs uppercase tracking-wide text-gray-500 hover:text-gray-400"
+                >
+                  <Icons.Arrow
+                    className={`${closedCategories.includes(category.id) ? "-rotate-90" : ""} 'transition ' mr-0.5 h-3 w-3 duration-200`}
+                  />
                   {category.label}
                 </button>
               )}
               <div className="mt-[5px] space-y-0.5">
-                {category.channels.map((channel) => (
-                  <ChannelLink
-                    key={channel.id}
-                    channel={channel}
-                    params={params}
-                  />
-                ))}
+                {category.channels
+                  .filter((channel) => {
+                    const categoryIsOpen = !closedCategories.includes(
+                      category.id,
+                    );
+                    return categoryIsOpen || channel.unread;
+                  })
+                  .map((channel) => (
+                    <ChannelLink
+                      key={channel.id}
+                      channel={channel}
+                      params={params}
+                    />
+                  ))}
               </div>
             </div>
           ))}
@@ -76,16 +98,29 @@ export function ChannelLink({ channel, params }) {
   let pathname = usePathname();
   pathname = pathname.split("/").slice(0, 3).join("/");
 
+  const state = isActive
+    ? "active"
+    : channel.unread
+      ? "inactiveUnread"
+      : "inactiveRead";
+  const classes = {
+    active:
+      "bg-zinc-700/[.5] text-white hover:text-white hover:bg-zinc-700/[.5]",
+    inactiveUnread:
+      "text-white hover:text-white hover:bg-zinc-700/[.5] active:bg-zinc-700/[.8]",
+    inactiveRead: "hover:text-white active:bg-zinc-700/[.8]",
+  };
+
   const linkBaseClasses =
-    "group mx-2 flex items-center rounded px-2 py-1 text-gray-400 transition hover:bg-zinc-600/[0.16] hover:text-gray-300";
-  const linkActiveClasses =
-    "bg-zinc-700/[.5] text-white hover:text-white hover:bg-zinc-700/[.5]";
-  const linkInactiveClasses = "hover:text-white";
+    "group mx-2 flex items-center rounded px-2 py-1 text-gray-400 transition hover:bg-zinc-600/[0.16] hover:text-gray-300 relative";
   return (
     <Link
-      className={`${isActive ? linkActiveClasses : linkInactiveClasses} ${linkBaseClasses} `}
+      className={`${classes[state]} ${linkBaseClasses} `}
       href={`${pathname}/channels/${channel.id}`}
     >
+      {state === "inactiveUnread" && (
+        <div className="absolute -left-2 h-2 w-1 rounded-r-full bg-white" />
+      )}
       <Icon className="mr-1.5 h-5 w-5 text-gray-500" />
       {channel.label}
       <Icons.AddPerson className="ml-auto h-4 w-4 opacity-0 group-hover:opacity-100 hover:text-gray-200" />
