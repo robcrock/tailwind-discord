@@ -24,7 +24,7 @@ const whitney = localFont({
       style: "normal",
     },
     {
-      path: "./fonts/whitney/whitney-semiBold.woff",
+      path: "./fonts/whitney/whitney-semibold.woff",
       weight: "600",
       style: "normal",
     },
