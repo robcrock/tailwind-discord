@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import localFont from "next/font/local";
 import "./globals.css";
 
-import LinkServer from "./components/nav-link";
 import NavLink from "./components/nav-link";
 import IconDiscord from "./components/icons/icon-discord";
 import Image from "next/image";

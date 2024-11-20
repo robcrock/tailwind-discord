@@ -1,17 +1,21 @@
+"use client";
+
 import * as Icons from "@/app/components/icons/icons";
 import data from "../../../data.json";
 import { NextPage } from "next";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 interface PageProps {
   params: {
-    id: string;
+    sid: string;
   };
   searchParams: { [key: string]: string | string[] | undefined };
 }
 
-const ServerPage: NextPage<PageProps> = ({ params }) => {
-  const { id } = params;
+const ServerIdPage: NextPage<PageProps> = ({ params }) => {
+  const { sid } = params;
+
   return (
     <>
       <div className="flex w-60 flex-col bg-zinc-800">
@@ -20,7 +24,7 @@ const ServerPage: NextPage<PageProps> = ({ params }) => {
             <Icons.Verified className="absolute h-4 w-4 text-zinc-500" />
             <Icons.Check className="absolute h-4 w-4 text-white" />
           </div>
-          Server {id}
+          Server {sid}
           <Icons.Chevron className="ml-auto h-[18px] w-[18px] opacity-80" />
         </button>
         <div className="hide-scrollbar flex-1 space-y-[21px] overflow-y-scroll pt-3 text-gray-400">
@@ -60,15 +64,18 @@ const ServerPage: NextPage<PageProps> = ({ params }) => {
   );
 };
 
-export default ServerPage;
+export default ServerIdPage;
 
 function ChannelLink({ channel }) {
   const Icon = channel.icon ? Icons[channel.icon] : Icons.Hashtag;
+
+  let pathname = usePathname();
+  pathname = pathname.split("/").slice(0, 3).join("/");
+
   return (
     <Link
-      key={channel.id}
       className="group mx-2 flex items-center rounded px-2 py-1 text-gray-400 transition hover:bg-zinc-500/[0.16] hover:text-gray-300"
-      href={"#"}
+      href={`${pathname}/channels/${channel.id}`}
     >
       <Icon className="mr-1.5 h-5 w-5 text-gray-500" />
       {channel.label}

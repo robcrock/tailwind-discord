@@ -10,7 +10,8 @@ type NavLinkProps = {
 };
 
 const NavLink = ({ href, children }: NavLinkProps) => {
-  const pathname = usePathname();
+  let pathname = usePathname();
+  pathname = pathname.split("/").slice(0, 3).join("/");
   const isActive = pathname === href;
 
   const activeIndicatorBaseClasses =
