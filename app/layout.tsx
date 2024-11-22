@@ -71,7 +71,7 @@ export default function RootLayout({
             <hr className="mx-2 rounded border-t-2 border-t-white/[.06]" />
             {servers.map(({ id, src }) => {
               return (
-                <NavLink key={id} href={`/servers/${id}`}>
+                <NavLink key={id} href={`/servers/${id}/channels/1`}>
                   <Image width="48" height="48" src={src} alt={""} />
                 </NavLink>
               );
