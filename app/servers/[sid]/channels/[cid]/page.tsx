@@ -3,9 +3,11 @@
 import * as Icons from "@/app/components/icons/icons";
 import { NextPage } from "next";
 import Link from "next/link";
-import { data } from "../../../../../data";
+import { data, IChannel, IMessage } from "../../../../../data";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { Message } from "../../../../components/message";
+import { MessageWithUser } from "../../../../components/message-with-user";
 
 // Add proper TypeScript interfaces
 interface Channel {
@@ -57,7 +59,7 @@ const ChannelIdPage: NextPage<PageProps> = ({ params }) => {
   return (
     <>
       {/* Server Sidebar */}
-      <div className="flex w-60 flex-col bg-zinc-800">
+      <div className="hidden w-60 flex-col bg-zinc-800 md:flex">
         {/* Server Header */}
         <button className="flex h-12 items-center px-4 font-title text-[15px] shadow-sm transition hover:bg-zinc-500/[0.16]">
           <div className="relative mr-1 h-4 w-4">
@@ -108,7 +110,7 @@ const ChannelIdPage: NextPage<PageProps> = ({ params }) => {
       {/* Main Channel Content */}
       <div className="flex min-w-0 flex-1 flex-shrink flex-col bg-zinc-700">
         <ChannelHeader channel={channel} />
-        <ChannelContent />
+        <ChannelContent channel={channel} />
       </div>
     </>
   );
@@ -189,8 +191,8 @@ function ChannelHeader({ channel }: { channel: Channel }) {
 
       {channel.description && (
         <>
-          <div className="mx-2 h-6 w-px bg-white/[.06]" />
-          <div className="mx-2 truncate text-sm font-medium text-gray-200">
+          <div className="mx-2 hidden h-6 w-px bg-white/[.06] md:block" />
+          <div className="mx-2 hidden truncate text-sm font-medium text-gray-200 md:block">
             {channel.description}
           </div>
         </>
@@ -202,36 +204,64 @@ function ChannelHeader({ channel }: { channel: Channel }) {
 }
 
 function ChannelActions() {
-  const actions = [
-    { Icon: Icons.HashtagWithSpeechBubble },
-    { Icon: Icons.Bell },
-    { Icon: Icons.Pin },
-    { Icon: Icons.People },
-    { Icon: Icons.Inbox },
-    { Icon: Icons.QuestionCircle },
-  ];
-
   return (
-    <div className="ml-auto flex items-center">
-      {actions.map(({ Icon }, i) => (
-        <button key={i} className="text-gray-200 hover:text-gray-100">
-          <Icon className="mx-2 h-6 w-6" />
+    <>
+      {/* Desktop buttons */}
+      <div className="ml-auto hidden items-center md:flex">
+        <button className="text-gray-200 hover:text-gray-100">
+          <Icons.HashtagWithSpeechBubble className="mx-2 h-6 w-6" />
         </button>
-      ))}
-    </div>
+        <button className="text-gray-200 hover:text-gray-100">
+          <Icons.Bell className="mx-2 h-6 w-6" />
+        </button>
+        <button className="text-gray-200 hover:text-gray-100">
+          <Icons.Pin className="mx-2 h-6 w-6" />
+        </button>
+        <button className="text-gray-200 hover:text-gray-100">
+          <Icons.People className="mx-2 h-6 w-6" />
+        </button>
+        <div className="relative mx-2">
+          <input
+            type="search"
+            placeholder="Search"
+            className="h-6 w-36 rounded border-none bg-gray-800 px-1.5 text-sm font-medium placeholder:text-gray-500"
+          />
+          <div className="absolute inset-y-0 right-0 mr-1.5 flex items-center">
+            <Icons.Spyglass className="h-4 w-4 text-gray-500" />
+          </div>
+        </div>
+        <button className="text-gray-200 hover:text-gray-100">
+          <Icons.Inbox className="mx-2 h-6 w-6" />
+        </button>
+        <button className="text-gray-200 hover:text-gray-100">
+          <Icons.QuestionCircle className="mx-2 h-6 w-6" />
+        </button>
+      </div>
+      {/* Mobile buttons */}
+      <div className="ml-auto flex items-center md:hidden">
+        <button className="text-gray-200 hover:text-gray-100">
+          <Icons.HashtagWithSpeechBubble className="mx-2 h-6 w-6" />
+        </button>
+        <button className="text-gray-200 hover:text-gray-100">
+          <Icons.People className="mx-2 h-6 w-6" />
+        </button>
+      </div>
+    </>
   );
 }
 
-function ChannelContent() {
+function ChannelContent({ channel }: { channel: IChannel }) {
+  const { messages } = channel;
   return (
-    <div className="hide-scrollbar flex-1 space-y-2 overflow-y-scroll p-3">
-      {[...Array(40)].map((_, i) => (
-        <p key={i}>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit. Corrupti,
-          est enim! Consequatur quaerat fuga labore provident veritatis at
-          eligendi voluptatum pariatur, obcaecati excepturi sequi blanditiis
-          asperiores enim consectetur repellendus animi!
-        </p>
+    <div className="hide-scrollbar flex-1 overflow-y-scroll">
+      {messages.map((message, i) => (
+        <div key={message.id}>
+          {i === 0 || message.user !== channel.messages[i - 1].user ? (
+            <MessageWithUser message={message} />
+          ) : (
+            <Message message={message} />
+          )}
+        </div>
       ))}
     </div>
   );

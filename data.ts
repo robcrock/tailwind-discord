@@ -1,10 +1,45 @@
+import { format } from "date-fns";
 import { faker } from "@faker-js/faker";
 
 faker.seed(123);
 
-export const data = {
+export interface IMessage {
+  id: number;
+  user: string;
+  avatarUrl: string;
+  date: string; // Format: "MM/dd/yyyy"
+  text: string;
+}
+
+// The function returns an array of messages
+type Messages = IMessage[];
+
+// You can then update your data type to include the messages:
+export interface IChannel {
+  id: number;
+  label: string;
+  description?: string;
+  icon?: string;
+  unread?: boolean;
+  messages: Messages;
+}
+
+interface Category {
+  id: number;
+  label: string;
+  channels: IChannel[];
+}
+
+interface Server {
+  label: string;
+  src: string;
+  categories: Category[];
+}
+
+export const data: Record<number, Server> = {
   1: {
     label: "Tailwind CSS",
+    src: "/images/tailwind.png",
     categories: [
       {
         id: 1,
@@ -93,10 +128,62 @@ export const data = {
           },
         ],
       },
+      {
+        id: 4,
+        label: "Off topic",
+        channels: [
+          {
+            id: 11,
+            label: "design",
+            description: "General discussion of web design.",
+            messages: getMessages(),
+          },
+          {
+            id: 12,
+            label: "development",
+            description: "General discussion of web development.",
+            messages: getMessages(),
+          },
+          {
+            id: 13,
+            label: "random",
+            description: "General discussion of everything else!",
+            unread: true,
+            messages: getMessages(),
+          },
+        ],
+      },
+      {
+        id: 5,
+        label: "Community",
+        channels: [
+          {
+            id: 14,
+            label: "jobs",
+            description:
+              "Job board. Please put [HIRING] or [FOR HIRE] at the beginning of your post.",
+            messages: getMessages(),
+          },
+          {
+            id: 15,
+            label: "showcase",
+            description: "Share your projects built with Tailwind CSS!",
+            unread: true,
+            messages: getMessages(),
+          },
+          {
+            id: 16,
+            label: "bots",
+            description: "Bot spam containment.",
+            messages: getMessages(),
+          },
+        ],
+      },
     ],
   },
   2: {
     label: "Next.js",
+    src: "/images/next.png",
     categories: [
       {
         id: 1,
@@ -185,12 +272,20 @@ export const data = {
               "Share as you build in public. Welcoming all makers and indie hackers.",
             messages: getMessages(),
           },
+          {
+            id: 11,
+            label: "moderation-feedback",
+            description:
+              "Discussion about this Discord server and moderation topics",
+            messages: getMessages(),
+          },
         ],
       },
     ],
   },
   3: {
     label: "Mirage JS",
+    src: "/images/mirage.png",
     categories: [
       {
         id: 1,
@@ -219,22 +314,17 @@ export const data = {
   },
 };
 
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min) + min); //The maximum is exclusive and the minimum is inclusive
-}
-
-function getMessages() {
-  return [...Array(getRandomInt(7, 25))]
+function getMessages(): IMessage[] {
+  return [...Array(faker.number.int({ min: 7, max: 25 }))]
     .map(() => {
-      let user = faker.internet.username();
-      let avatarUrl = faker.image.avatar();
+      const user = faker.internet.username();
+      const avatarUrl = faker.image.avatar();
 
-      return [...Array(getRandomInt(1, 4))].map(() => ({
+      return [...Array(faker.number.int({ min: 1, max: 4 }))].map(() => ({
+        id: faker.number.int(),
         user,
         avatarUrl,
-        date: "01/15/2021",
+        date: format(new Date(faker.date.past()), "MM/dd/yyyy"),
         text: faker.lorem.sentences(3),
       }));
     })

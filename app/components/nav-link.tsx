@@ -11,7 +11,8 @@ type NavLinkProps = {
 
 const NavLink = ({ href, children }: NavLinkProps) => {
   const pathname = usePathname();
-  const isActive = pathname === href;
+  const serverIsActive =
+    pathname.split("/").slice(0, 3)[2] === href.split("/").slice(0, 3)[2];
 
   const activeIndicatorBaseClasses =
     "bg-white group-hover:w-1 rounded-r-full transition-all duration-300 origin-left";
@@ -28,13 +29,13 @@ const NavLink = ({ href, children }: NavLinkProps) => {
     <div className="group relative">
       <div className="absolute -left-3 flex h-full items-center">
         <div
-          className={`${isActive ? activeIndicatorActiveClasses : activeIndicatorInactiveClasses} ${activeIndicatorBaseClasses}`}
+          className={`${serverIsActive ? activeIndicatorActiveClasses : activeIndicatorInactiveClasses} ${activeIndicatorBaseClasses}`}
         ></div>
       </div>
       <div className="group-active:translate-y-px">
         <Link
           href={href}
-          className={`${isActive ? iconActiveClasses : iconInactiveClasses} ${iconBaseClasses}`}
+          className={`${serverIsActive ? iconActiveClasses : iconInactiveClasses} ${iconBaseClasses}`}
         >
           {children}
         </Link>

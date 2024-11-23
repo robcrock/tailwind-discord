@@ -77,6 +77,10 @@ const config: Config = {
       },
     },
   },
-  plugins: [tailwindcssAnimate, tailwindScrollbar],
+  plugins: [
+    tailwindcssAnimate,
+    tailwindScrollbar,
+    require("@tailwindcss/forms"),
+  ],
 };
 export default config;

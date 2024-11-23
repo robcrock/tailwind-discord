@@ -9,6 +9,11 @@ const nextConfig = {
         hostname: "pbs.twimg.com",
         pathname: "/profile_images/**",
       },
+      {
+        protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+        pathname: "/u/**",
+      },
     ],
   },
 };
