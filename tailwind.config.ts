@@ -1,6 +1,5 @@
 import type { Config } from "tailwindcss";
 import tailwindcssAnimate from "tailwindcss-animate";
-import tailwindScrollbar from "tailwind-scrollbar";
 
 // Silence TypeScript errors for require in config file
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -79,7 +78,6 @@ const config: Config = {
   },
   plugins: [
     tailwindcssAnimate,
-    tailwindScrollbar,
     require("@tailwindcss/forms"),
   ],
 };

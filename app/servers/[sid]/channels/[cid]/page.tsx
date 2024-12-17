@@ -71,7 +71,8 @@ const ChannelIdPage: NextPage<PageProps> = ({ params }) => {
         </button>
 
         {/* Channel List */}
-        <div className="hide-scrollbar flex-1 space-y-[21px] overflow-y-scroll pt-3 text-gray-400">
+        {/* <div className="hide-scrollbar flex-1 space-y-[21px] overflow-y-scroll pt-3 text-gray-400"> */}
+        <div className="scrollbar-hidden flex-1 space-y-[21px] overflow-y-scroll pt-3 text-gray-400">
           {server.categories.map((category) => (
             <div key={category.label}>
               {category.label && (

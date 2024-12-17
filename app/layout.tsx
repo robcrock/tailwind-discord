@@ -62,7 +62,7 @@ export default function RootLayout({
         className={`${whitney.variable} ${ginto.variable} font-whitney antialiased`}
       >
         <div className="flex h-screen text-gray-300">
-          <div className="hide-scrollbar hidden space-y-2 overflow-y-scroll bg-zinc-900 p-3 md:block">
+          <div className="scrollbar-hidden hidden space-y-2 overflow-y-scroll bg-zinc-900 p-3 md:block">
             <NavLink href={"/"}>{homeIcon}</NavLink>
             <hr className="mx-2 rounded border-t-2 border-t-white/[.06]" />
             {Object.entries(data).map((entry) => {
